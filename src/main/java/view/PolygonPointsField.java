@@ -79,10 +79,13 @@ public class PolygonPointsField extends JPanel {
             else if (e.getButton() == 3) {
                 if (!end) {
                     boolean delete = false;
-                    for (Point p : polygonPoints) {
+                    Iterator<Point> iterator = polygonPoints.iterator();
+                    while (iterator.hasNext()) {
+                        Point p = iterator.next();
                         if (Math.abs(e.getX() - p.getX()) <= 5 && Math.abs(e.getY() - p.getY()) <= 5) {
                             eventListener.removePolygonPoint(p.getX(), p.getY());
                             delete = true;
+                            break;
                         }
                     }
                     if (!delete) end = true;

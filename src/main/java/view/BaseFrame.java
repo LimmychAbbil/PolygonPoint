@@ -24,7 +24,7 @@ public class BaseFrame extends JFrame {
     public void init() {
         getContentPane().add(field);
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setTitle("PolygonPoints v.0.01b");
+        setTitle("PolygonPoints v.0.01c");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JMenuBar menuBar = new JMenuBar();
         JMenuItem resetItem = new JMenuItem("Reset");
