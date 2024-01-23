@@ -17,8 +17,8 @@ import java.util.List;
  * Created by Limmy on 15.06.2016.
  */
 public class PolygonPointsField extends JPanel {
-    private java.util.List<Point> polygonPoints;
-    private PolygonPoints model;
+    private final java.util.List<Point> polygonPoints;
+    private final PolygonPoints model;
     private EventListener eventListener;
     private Point currentPoint;
     MouseHandler handler;
@@ -74,9 +74,9 @@ public class PolygonPointsField extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
 
-            if (e.getButton() == 1 && !end)
+            if (e.getButton() == MouseEvent.BUTTON1 && !end)
                 eventListener.addPolygonPoint(e.getX(), e.getY());
-            else if (e.getButton() == 3) {
+            else if (e.getButton() == MouseEvent.BUTTON3) {
                 if (!end) {
                     boolean delete = false;
                     Iterator<Point> iterator = polygonPoints.iterator();
@@ -92,7 +92,7 @@ public class PolygonPointsField extends JPanel {
                 }
                 if (end) eventListener.putCurrentPoint(e.getX(), e.getY());
             }
-            else if (e.getButton() == 2) {
+            else if (e.getButton() == MouseEvent.BUTTON2) {
                 eventListener.resetAll();
             }
         }

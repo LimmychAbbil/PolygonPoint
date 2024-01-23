@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Limmy on 15.06.2016.
  */
 public class PolygonPoints {
-    private ArrayList<Point> polygonPoints;
+    private final ArrayList<Point> polygonPoints;
     private Point currentPoint;
 
     public PolygonPoints() {
@@ -46,15 +46,14 @@ public class PolygonPoints {
 
     public boolean isPointInPolygon() {
         if (polygonPoints.isEmpty()) return false;
-        //Если точка совпадает с вершиной или лежит на стороне - return true;
+        //Якщо точка співпадає з вершиною або лежить на ребрі багатокутника - return true;
         if (doesRayStartsOnLine(currentPoint, polygonPoints)) return true;
-        //Иначе пускаем луч (так, чтоб прямая его содержащая не проходила через вершины многоугольника)
+        //Інакше пускаємо промінь (так, щоб пряма що його містить не проходила через вершини багатокутника)
         Point nearPoint = null;
-        while (true) {
+        do {
             nearPoint = generateRandomPoint(currentPoint);
-            if (!doesLineCrossPolygonPoint(currentPoint, nearPoint, polygonPoints)) break;
-        }
-        //и считаем количество пересечений. если нечётное - точка внутри.
+        } while (doesLineCrossPolygonPoint(currentPoint, nearPoint, polygonPoints));
+        //Рахуємо кількість перетинів з ребрами. Якщо непарне - точка всередині.
         int intersections = 0;
         for (int i = 0; i < polygonPoints.size() - 1; i++) {
             if (doesLineCrossPolygonSide(polygonPoints.get(i), polygonPoints.get(i+1), currentPoint, nearPoint)) intersections++;
@@ -76,10 +75,9 @@ public class PolygonPoints {
         return false;
     }
 
-    /*Лежит ли точка на вершине или стороне многоугольника? */
     private boolean doesRayStartsOnLine(Point startRayPoint, List<Point> polygon) {
-        for (int i = 0; i < polygon.size(); i++) {
-            if (polygon.get(i).getX() == startRayPoint.getX() && (polygon.get(i).getY() == startRayPoint.getY())) return true;
+        for (Point point : polygon) {
+            if (point.getX() == startRayPoint.getX() && (point.getY() == startRayPoint.getY())) return true;
         }
         for (int i = 0; i < polygon.size() - 1; i++) {
             int computing = (startRayPoint.getX() - polygon.get(i).getX()) * (polygon.get(i + 1).getY() - polygon.get(i).getY()) -
@@ -88,17 +86,17 @@ public class PolygonPoints {
             if (computing == 0) {
                 int scalar = (polygon.get(i).getX() - startRayPoint.getX()) * (polygon.get(i + 1).getX() - startRayPoint.getX()) +
                         (polygon.get(i).getY() - startRayPoint.getY()) * (polygon.get(i + 1).getY() - startRayPoint.getY());
-                if (scalar < 0) return true;
+                return scalar < 0;
             }
         }
         int last = polygon.size() - 1;
         int lastComputing = (startRayPoint.getX() - polygon.get(last).getX()) * (polygon.get(0).getY() - polygon.get(last).getY()) -
                 (polygon.get(0).getX() - polygon.get(last).getX()) * (startRayPoint.getY() - polygon.get(last).getY());
-        //точка лежит на прямой, содержащую last-сторону
+        //точка лежить на прямій, що містить last-бік
         if (lastComputing == 0) {
             int scalar = (polygon.get(last).getX() - startRayPoint.getX()) * (polygon.get(0).getX() - startRayPoint.getX()) +
                     (polygon.get(last).getY() - startRayPoint.getY()) * (polygon.get(0).getY() - startRayPoint.getY());
-            if (scalar < 0) return true;
+            return scalar < 0;
         }
 
         return false;
@@ -112,7 +110,7 @@ public class PolygonPoints {
         if (firstComputing * secondComputing >= 0) return false;
         else
         {
-            //Ищем точку пересечения прямой и отрезка (Решить систему)
+            //Шукаємо точку перетину прямої та відрізку (розв'язуємо систему лінійних рівнянь)
             double standartDet = det((p2Line.getY() - p1Line.getY()), (p1Line.getX() - p2Line.getX()), (peSide.getY() - psSide.getY()), (psSide.getX() - peSide.getX()));
             double intersectionX = (1 / standartDet) * det((p1Line.getX() * p2Line.getY()) - (p2Line.getX() * p1Line.getY()), (p1Line.getX() - p2Line.getX()),
                     (psSide.getX() * peSide.getY()) - (psSide.getY() * peSide.getX()), (psSide.getX() - peSide.getX()));
@@ -120,10 +118,9 @@ public class PolygonPoints {
                     (peSide.getY() - psSide.getY()), (psSide.getX() * peSide.getY()) - (psSide.getY() * peSide.getX()));
 
 
-            //Проверяем, что точка лежит на луче:
-            //Делаем 2 вектора (лучевой и отрезочный) и находим скалярное произведение. Если >0 - true
+            //Перевіряємо чи промінь містить точку:
+            //Робимо 2 вектора (проміневий та відразка) і знаходимо скалярний добуток. Якщо >0 - true
             double scalar = (p2Line.getX() - p1Line.getX()) * (intersectionX - p1Line.getX()) + (p2Line.getY() - p1Line.getY()) * (intersectionY - p1Line.getY());
-//            System.out.println(scalar);
             return scalar > 0;
 
         }

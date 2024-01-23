@@ -12,9 +12,9 @@ import java.awt.event.ActionListener;
 public class BaseFrame extends JFrame {
     private static final int DEFAULT_WIDTH = 500;
     private static final int DEFAULT_HEIGHT = 500;
-    private PolygonPointsField field;
-    private PolygonPoints model;
-    private BaseController controller;
+    private final PolygonPointsField field;
+    private final PolygonPoints model;
+    private final BaseController controller;
     public BaseFrame(PolygonPoints model, BaseController controller) {
         this.model = model;
         this.controller = controller;
@@ -24,7 +24,7 @@ public class BaseFrame extends JFrame {
     public void init() {
         getContentPane().add(field);
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setTitle("PolygonPoints v.0.01c");
+        setTitle("PolygonPoints v.0.01d");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JMenuBar menuBar = new JMenuBar();
         JMenuItem resetItem = new JMenuItem("Reset");
